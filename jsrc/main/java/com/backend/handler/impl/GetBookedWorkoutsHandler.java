@@ -25,14 +25,14 @@ public class GetBookedWorkoutsHandler implements EndpointHandler {
     }
 
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-        Map<String, String> pathParameters = requestEvent.getPathParameters();
+        Map<String, String> queryParameters = requestEvent.getQueryStringParameters();
 
         if (pathParameters == null || !pathParameters.containsKey("userId") ||
-                pathParameters.get("userId") == null || pathParameters.get("userId").isBlank()) {
+                pathParameters.get("userId") == null || queryParameters.get("userId").isBlank()) {
             return createErrorResponse(400, "Missing userId parameter");
         }
 
-        String userId = pathParameters.get("userId");
+        String userId = queryParameters.get("userId");
         List<Workout> workouts = workoutService.getWorkoutsByUserId(userId);
 
         if (workouts == null || workouts.isEmpty()) {

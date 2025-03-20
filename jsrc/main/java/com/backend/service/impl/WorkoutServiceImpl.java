@@ -35,22 +35,7 @@ public class WorkoutServiceImpl implements WorkoutService {
 
         return workoutTable.query(r -> r.queryConditional(queryConditional))
                 .items()
-                .stream()
-                .map(this::mapToWorkout)
                 .collect(Collectors.toList());
-    }
-
-    private Workout mapToWorkout(Workout workout) {
-        return Workout.builder()
-                .id(workout.getId())
-                .activity(workout.getActivity())
-                .clientId(workout.getClientId())
-                .coachId(workout.getCoachId())
-                .feedbackId(workout.getFeedbackId())
-                .dateTime(workout.getDateTime())
-                .description(workout.getDescription())
-                .state(workout.getState())
-                .build();
     }
 
 
