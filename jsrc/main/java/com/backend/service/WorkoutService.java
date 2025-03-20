@@ -7,4 +7,6 @@ public interface WorkoutService {
     List<Workout> getWorkoutsByUserId(String userId);
     List<Workout> getAvailableWorkouts();
     Workout bookWorkout(BookNewWorkoutRequestBody request);
+    BookedWorkoutListResponse cancelWorkout(String workoutId);
+
 }

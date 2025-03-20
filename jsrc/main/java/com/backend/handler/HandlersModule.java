@@ -127,6 +127,7 @@ public class HandlersModule {
         return new GetBookedWorkoutsHandler(workoutService, gson);
     }
 
+
     @Singleton
     @Provides
     @IntoMap
@@ -142,6 +143,15 @@ public class HandlersModule {
     @StringKey("POST:/workouts/")
     public EndpointHandler provideBookWorkoutHandler(WorkoutService workoutService, Gson gson) {
         return new BookWorkoutHandler(workoutService, gson);
+    }
+
+
+    @Singleton
+    @Provides
+    @IntoMap
+    @StringKey("DELETE:/workouts/{workoutId}")
+    public EndpointHandler provideCancelWorkoutHandler(WorkoutService workoutService, Gson gson) {
+        return new CancelWorkoutHandler(workoutService, gson);
     }
 
 

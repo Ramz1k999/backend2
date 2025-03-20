@@ -1,5 +1,6 @@
 package com.backend.service.impl;
 
+import com.backend.dto.*;
 import com.backend.model.Workout;
 import com.backend.service.WorkoutService;
 import software.amazon.awssdk.enhanced.dynamodb.*;
@@ -61,17 +62,49 @@ public class WorkoutServiceImpl implements WorkoutService {
         Workout workoutToBook = workouts.get(0);
 
         // If the workout is already booked, return null
-        if ("BOOKED".equals(workoutToBook.getState())) {
+        if ("SCHEDULED".equals(workoutToBook.getState())) {
             return null;
         }
 
         // Update workout details
         workoutToBook.setClientId(request.getClientId());
-        workoutToBook.setState("BOOKED");
+        workoutToBook.setState("SCHEDULED");
 
         // Save updated workout to DynamoDB
         workoutTable.putItem(workoutToBook);
 
         return workoutToBook;
     }
+
+    @Override
+    public BookedWorkoutListResponse cancelWorkout(String workoutId) {
+        Workout workout = workoutTable.getItem(r -> r.key(k -> k.partitionValue(workoutId)));
+
+        if (workout == null) {
+            return new BookedWorkoutListResponse(Collections.emptyList()); // Return empty list if not found
+        }
+
+        // Reset workout state and clientId
+        workout.setClientId(null);
+        workout.setState(null);
+
+        // Save updated workout to DynamoDB
+        workoutTable.putItem(workout);
+
+        // Wrap in response object
+        BookedWorkoutResponse response = new BookedWorkoutResponse(
+            workout.getActivity(),
+            workout.getClientId(),
+            workout.getCoachId(),
+            workout.getDateTime(),
+            workout.getDescription(),
+            workout.getFeedbackId(),
+            workout.getId(),
+            workout.getName(),
+            workout.getState()
+        );
+
+        return new BookedWorkoutListResponse(Collections.singletonList(response));
+    }
+
 }
