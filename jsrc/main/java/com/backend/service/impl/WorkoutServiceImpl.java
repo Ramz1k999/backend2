@@ -45,5 +45,33 @@ public class WorkoutServiceImpl implements WorkoutService {
                 .collect(Collectors.toList());
     }
 
+    public Workout bookWorkout(BookNewWorkoutRequestBody request) {
+        // Query workout based on coachId, date, and timeSlot
+        List<Workout> workouts = workoutTable.scan().items()
+                .stream()
+                .filter(w -> w.getCoachId().equals(request.getCoachId()) &&
+                             w.getDate().equals(request.getDate()) &&
+                             w.getTimeSlot().equals(request.getTimeSlot()))
+                .toList();
 
+        if (workouts.isEmpty()) {
+            return null; // No matching workout found
+        }
+
+        Workout workoutToBook = workouts.get(0);
+
+        // If the workout is already booked, return null
+        if ("BOOKED".equals(workoutToBook.getState())) {
+            return null;
+        }
+
+        // Update workout details
+        workoutToBook.setClientId(request.getClientId());
+        workoutToBook.setState("BOOKED");
+
+        // Save updated workout to DynamoDB
+        workoutTable.putItem(workoutToBook);
+
+        return workoutToBook;
+    }
 }

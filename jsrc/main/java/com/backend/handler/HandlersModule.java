@@ -136,4 +136,13 @@ public class HandlersModule {
     }
 
 
+    @Singleton
+    @Provides
+    @IntoMap
+    @StringKey("POST:/workouts/")
+    public EndpointHandler provideBookWorkoutHandler(WorkoutService workoutService, Gson gson) {
+        return new BookWorkoutHandler(workoutService, gson);
+    }
+
+
 }
