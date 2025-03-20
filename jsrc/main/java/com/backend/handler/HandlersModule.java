@@ -122,9 +122,17 @@ public class HandlersModule {
     @Singleton
     @Provides
     @IntoMap
-    @StringKey("GET:/workouts/booked/{userId}")
+    @StringKey("GET:/workouts/booked/")
     public EndpointHandler provideGetBookedWorkoutsHandler(WorkoutService workoutService, Gson gson) {
         return new GetBookedWorkoutsHandler(workoutService, gson);
+    }
+
+    @Singleton
+    @Provides
+    @IntoMap
+    @StringKey("GET:/workouts/available")
+    public EndpointHandler provideGetAvailableWorkoutsHandler(WorkoutService workoutService, Gson gson) {
+        return new GetAvailableWorkoutsHandler(workoutService, gson);
     }
 
 

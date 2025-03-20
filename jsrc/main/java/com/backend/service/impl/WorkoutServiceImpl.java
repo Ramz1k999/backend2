@@ -38,6 +38,12 @@ public class WorkoutServiceImpl implements WorkoutService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Workout> getAvailableWorkouts() {
+        return workoutTable.scan().items().stream()
+                .filter(workout -> workout.getState() == WorkoutState.AVAILABLE)
+                .collect(Collectors.toList());
+    }
 
 
 }
